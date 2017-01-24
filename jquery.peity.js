@@ -340,7 +340,7 @@
                 return input * width / values.length
             };
 
-            var cheight = height - 15;
+            var cheight = height - 30;
             var yScale = this.y = function (input) {
                 return cheight - (
                         diff
@@ -376,7 +376,7 @@
                 var bar = svgElement('rect', {
                     fill: fill.call(this, value, i, values),
                     x: x,
-                    y: y1,
+                    y: y1 + 15,
                     width: w,
                     height: h
                 });
@@ -386,54 +386,75 @@
                     bar
                 );
 
+
+                // i == 14 ? "7B+" :
+                // i == 15 ? "7C" :
+                // i == 16 ? "7C+" :
+                // i == 17 ? "8A" :
+                // i == 18 ? "8A+" :
+                // i == 19 ? "8B" :
+                // i == 20 ? "8B+" :
+                // i == 21 ? "8C" : "";
+
+                var grade = i == 0 ? "3" :
+                    i == 1 ? "4" :
+                        i == 2 ? "5" :
+                                i == 3 ? "6A" :
+                                    i == 4 ? "6B" :
+                                        i == 5 ? "6C" :
+                                            i == 6 ? "7A" :
+                                                i == 7 ? "7B" :
+                                                    i == 8 ? "7C" :
+                                                        i == 9 ? "8A" :
+                                                            i == 10 ? "8B" :
+                                                                i == 11 ? "8C" :
+                                                                    i == 12 ? "9A" : "";
+
+
+                var rx = x - (grade.length > 1 ? -0.8 : -4 );
                 var text = svgElement('text', {
                     fill: fill.call(this, value, i, values),
-                    x: x - 1.5,
+                    x: rx,
                     y: height,
                     width: w,
                     class: "grade-text",
                     "font-size": "10px",
-                    height: h
+                    "font-weight": "bold",
+                    height: h,
+                    display: "none"
                 });
 
-                var grade = i == 0 ? "3" :
-                    i == 1 ? "4" :
-                    i == 2 ? "4+" :
-                    i == 3 ? "5" :
-                    i == 4 ? "5+" :
-                    i == 5 ? "6A" :
-                    i == 6 ? "6A+" :
-                    i == 7 ? "6B" :
-                    i == 8 ? "6B+" :
-                    i == 9 ? "6C" :
-                    i == 10 ? "6C+" :
-                    i == 11 ? "7A" :
-                    i == 12 ? "7A+" :
-                    i == 13 ? "7B" :
-                    i == 14 ? "7B+" :
-                    i == 15 ? "7C" :
-                    i == 16 ? "7C+" :
-                    i == 17 ? "8A" :
-                    i == 18 ? "8A+" :
-                    i == 19 ? "8B" :
-                    i == 20 ? "8B+" :
-                    i == 21 ? "8C" : "";
+                rx = x - (value.toString().length > 2 ? 2 :
+                          value.toString().length > 1 ? -2 : -5 );
+                var val_text = svgElement('text', {
+                    fill: "#FFF",
+                    x: rx,
+                    y: y1 + 10,
+                    width: w,
+                    class: "grade-text",
+                    "font-size": "10px",
+                    "font-weight": "bold",
+                    height: h,
+                    display: "none"
+                });
+
+                val_text.text(value)
+
+
 
 
                 text.text(grade);
 
-                $svg.on('mouseover', function (e) {
 
-                    $('.grade-text').show();
+                $svg.hover(function() {
+
+                    $('.grade-text').fadeIn(100);
+                }, function() {
+                    $('.grade-text').fadeOut(100);
                 });
 
-                $svg.on('mouseout', function (e) {
-                    $('.grade-text').hide();
-                });
-
-                $svg.append(
-                    text
-                );
+                $svg.append(text);
+                $svg.append(val_text);
 
             }
         }
